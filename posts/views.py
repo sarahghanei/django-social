@@ -33,3 +33,20 @@ def add_post(request, user_id):
 		return render(request, 'posts/add_post.html', {'form':form})
 	else:
 		return redirect('posts:all_posts')
+
+@login_required
+def post_delete(request, user_id, post_id):
+	if user_id == request.user.id:
+		Post.objects.filter(pk=post_id).delete()
+		messages.success(request, 'your post deleted successfully', 'success')
+		return redirect('account:dashboard', user_id)
+	else:
+		return redirect('posts:all_posts')
+
+
+
+
+
+
+
+

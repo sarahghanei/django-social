@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% if request.user.is_authenticated and request.user.id == post.user.id%}
+        <a href="{% url 'posts:post_delete' post.user.id post.id %}">delete post</a>
+    {% endif %}
     <p>{{ post.user }} | {{ post.created|date }}</p>
     <p>{{ post.body }}</p>
 {% endblock %}
