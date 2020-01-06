@@ -10,7 +10,17 @@
 
     {% with total=comments.count %}
         <p>This post has {{ total }} comment{{ total|pluralize }}</p>
-    {% endwith %}
+    {% endwith %}<br/><br/><br/>
+
+    {% if request.user.is_authenticated %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Send" class="btn btn-primary">
+    </form>
+    {% else %}
+        <p>only logged in users can send comments</p>
+    {% endif %}<br/><br/><br/>
 
     {% for comment in comments %}
         <div class="card bg-dark text-white">
