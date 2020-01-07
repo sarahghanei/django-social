@@ -29,3 +29,8 @@ class AddCommentForm(forms.ModelForm):
 		help_texts = {
 			'body':'max 400 char'
 		}
+
+class AddReplyForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ('body',)
