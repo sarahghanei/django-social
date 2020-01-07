@@ -64,10 +64,12 @@ def edit_profile(request, user_id):
 		form = EditProfileForm(request.POST, instance=user.profile)
 		if form.is_valid():
 			form.save()
+			user.email = form.cleaned_data['email']
+			user.save()
 			messages.success(request, 'your profile edited successfully', 'success')
 			return redirect('account:dashboard', user_id)
 	else:
-		form = EditProfileForm(instance=user.profile)
+		form = EditProfileForm(instance=user.profile, initial={'email':request.user.email})
 	return render(request, 'account/edit_profile.html', {'form':form})
 
 

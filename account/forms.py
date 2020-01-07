@@ -20,6 +20,7 @@ class UserRegistrationForm(forms.Form):
 
 
 class EditProfileForm(forms.ModelForm):
+	email = forms.EmailField()
 	class Meta:
 		model = Profile
 		fields = ('bio', 'age')
