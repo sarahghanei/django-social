@@ -24,15 +24,19 @@
 
     {% for comment in comments %}
         <div class="card bg-dark text-white">
-            <p class="card-header">{{ comment.user }}</p>
+            <p class="card-header">{{ comment.user }} <a href="">reply</a></p>
             <p class="card-body">{{ comment.body }}</p>
-            <div class="card-body">
+            {% if request.user.is_authenticated %}
+            <div class="card-body" style="display:none">
                 <form action="{% url 'posts:add_reply' post.id comment.id %}" method="post">
                     {% csrf_token %}
                     {{ reply.as_p }}
                     <input type="submit" value="Send">
                 </form>
             </div>
+            {% else %}
+                <p>you have to login to send reply</p>
+            {% endif %}
             {% for reply in comment.rcomment.all %}
                 <p class="bg-primary text-white p-3 m-5">{{ reply.user }} <br/> {{ reply.body }}</p>
             {% endfor %}
