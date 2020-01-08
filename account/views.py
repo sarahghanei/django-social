@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from posts.models import Post
 from django.contrib.auth.decorators import login_required
+from random import randint
+from kavenegar import *
 
 
 def user_login(request):
@@ -75,7 +77,14 @@ def edit_profile(request, user_id):
 
 def phone_login(request):
 	if request.method == 'POST':
-		pass
+		form = PhoneLoginForm(request.POST)
+		if form.is_valid():
+			phone = f"0{form.cleaned_data['phone']}"
+			rand_num = randint(1000, 9999)
+			api = KavenegarAPI('54624B564154623558564355506C59417230747550612F7456524A544F4B733535374A624830485856456B3D')
+			params = {'sender':'', 'receptor':phone, 'message':rand_num}
+			api.sms_send(params)
+			# return redirect('account:verify', phone, rand_num)
 	else:
 		form = PhoneLoginForm()
 	return render(request, 'account/phone_login.html', {'form':form})
