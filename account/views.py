@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegistrationForm, UserLoginForm, EditProfileForm
+from .forms import UserRegistrationForm, UserLoginForm, EditProfileForm, PhoneLoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -73,7 +73,12 @@ def edit_profile(request, user_id):
 	return render(request, 'account/edit_profile.html', {'form':form})
 
 
-
+def phone_login(request):
+	if request.method == 'POST':
+		pass
+	else:
+		form = PhoneLoginForm()
+	return render(request, 'account/phone_login.html', {'form':form})
 
 
 
