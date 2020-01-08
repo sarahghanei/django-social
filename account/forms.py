@@ -36,7 +36,8 @@ class PhoneLoginForm(forms.Form):
 		return self.cleaned_data['phone']
 
 
-
+class VerifyCodeForm(forms.Form):
+	code = forms.IntegerField()
 
 
 
