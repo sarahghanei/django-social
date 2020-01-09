@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from random import randint
 from kavenegar import *
 from .models import Profile, Relation
+from django.http import JsonResponse
 
 
 def user_login(request):
@@ -111,13 +112,30 @@ def verify(request, phone, rand_num):
 		form = VerifyCodeForm()
 	return render(request, 'account/verify.html', {'form':form})
 
-
+@login_required
 def follow(request):
-	pass
+	if request.method == 'POST':
+		user_id = request.POST['user_id']
+		following = get_object_or_404(User, pk=user_id)
+		check_relation = Relation.objects.filter(from_user=request.user, to_user=following)
+		if check_relation.exists():
+			return JsonResponse({'status':'exists'})
+		else:
+			Relation(from_user=request.user, to_user=following).save()
+			return JsonResponse({'status':'ok'})
 
+
+@login_required
 def unfollow(request):
-	pass
-
+	if request.method == 'POST':
+		user_id = request.POST['user_id']
+		following = get_object_or_404(User, pk=user_id)
+		check_relation = Relation.objects.filter(from_user=request.user, to_user=following)
+		if check_relation.exists():
+			check_relation.delete()
+			return JsonResponse({'status':'ok'})
+		else:
+			return JsonResponse({'status':'notexists'})
 
 
 

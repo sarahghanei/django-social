@@ -21,7 +21,10 @@ if(follow == 'follow'){
             'user_id': user_id,
         },
         success: function(data){
-
+            if(data['status'] == 'ok'){
+                $('#following_btn').text(btn_text)
+                $('#following_btn').attr({'class':btn_class})
+            }
         }
 
     });
