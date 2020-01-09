@@ -14,6 +14,13 @@
     {% endif %}
     <h4 class="text-center">{{ user.username|capfirst }}</h4>
     <p class="text-center">{{ user.profile.bio }}</p>
+
+    {% if request.user.id != user.id and not is_following %}
+    <button id="following-btn" style="display:block" class="btn btn-primary text-center mx-auto">follow</button>
+    {% elif request.user.id != user.id and is_following %}
+    <button id="following-btn" style="display:block" class="btn btn-warning text-center mx-auto">unfollow</button>
+    {% endif %}
+
     <br/><br/><br/>
     {% for post in posts %}
         <div class="card">

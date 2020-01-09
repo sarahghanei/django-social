@@ -7,7 +7,7 @@ from posts.models import Post
 from django.contrib.auth.decorators import login_required
 from random import randint
 from kavenegar import *
-from .models import Profile
+from .models import Profile, Relation
 
 
 def user_login(request):
@@ -54,9 +54,13 @@ def user_dashboard(request, user_id):
 	user = get_object_or_404(User, pk=user_id)
 	posts = Post.objects.filter(user=user)
 	self_dash = False
+	is_following = False
+	relation = Relation.objects.filter(from_user=request.user, to_user=user)
+	if relation.exists():
+		is_following = True
 	if request.user.id == user_id:
 		self_dash = True
-	return render(request, 'account/dashboard.html', {'user':user, 'posts':posts, 'self_dash':self_dash})
+	return render(request, 'account/dashboard.html', {'user':user, 'posts':posts, 'self_dash':self_dash, 'is_following':is_following})
 
 
 
@@ -108,10 +112,11 @@ def verify(request, phone, rand_num):
 	return render(request, 'account/verify.html', {'form':form})
 
 
+def follow(request):
+	pass
 
-
-
-
+def unfollow(request):
+	pass
 
 
 
