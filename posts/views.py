@@ -4,6 +4,8 @@ from .forms import AddPostForm, EditPostForm, AddCommentForm, AddReplyForm
 from django.contrib import messages
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
+import redis
+from django.conf import settings
 
 
 
@@ -11,11 +13,13 @@ def all_posts(request):
 	posts = Post.objects.all()
 	return render(request, 'posts/all_posts.html', {'posts':posts})
 
-
+redis_con = redis.Redis(settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_DB)
 def post_detail(request, year, month, day, slug):
 	post = get_object_or_404(Post, created__year=year, created__month=month, created__day=day, slug=slug)
 	comments = Comment.objects.filter(post=post, is_reply=False)
 	reply_form = AddReplyForm()
+	redis_con.hsetnx('post_views', post.id, 0)
+	rviews = redis_con.hincrby('post_views', post.id)
 	can_like = False
 	if request.user.is_authenticated:
 		if post.user_can_like(request.user):
@@ -30,7 +34,7 @@ def post_detail(request, year, month, day, slug):
 			messages.success(request, 'you comment submitted successfully')
 	else:
 		form = AddCommentForm()
-	return render(request, 'posts/post_detail.html', {'post':post, 'comments':comments, 'form':form, 'reply':reply_form, 'can_like':can_like})
+	return render(request, 'posts/post_detail.html', {'post':post, 'comments':comments, 'form':form, 'reply':reply_form, 'can_like':can_like, 'rviews':rviews})
 
 @login_required
 def add_post(request, user_id):
