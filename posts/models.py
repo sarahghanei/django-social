@@ -29,3 +29,7 @@ class Comment(models.Model):
 
 	class Meta:
 		ordering = ('-created',)
+
+class Vote(models.Model):
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='pvote')
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='uvote')
