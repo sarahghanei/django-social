@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Comment
+from .models import Post, Comment, Vote
 from .forms import AddPostForm, EditPostForm, AddCommentForm, AddReplyForm
 from django.contrib import messages
 from django.utils.text import slugify
@@ -91,7 +91,13 @@ def add_reply(request, post_id, comment_id):
 	return redirect('posts:post_detail', post.created.year, post.created.month, post.created.day, post.slug)
 
 
-
+@login_required
+def post_like(request, post_id):
+	post = get_object_or_404(Post, id=post_id)
+	like = Vote(post=post, user=request.user)
+	like.save()
+	messages.success(request, 'you liked successfully', 'success')
+	return redirect('posts:post_detail', post.created.year, post.created.month, post.created.day, post.slug)
 
 
 
