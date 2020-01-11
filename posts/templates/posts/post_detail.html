@@ -13,7 +13,7 @@
     {% endwith %}
 
     {% if request.user.is_authenticated %}
-        <a href="{% url 'posts:post_like' post.id %}" class="btn btn-primary col-md-2">Like</a>
+        <a href="{% url 'posts:post_like' post.id %}" class="btn btn-primary {% if can_like %}disabled {% endif %} col-md-2">Like {{ post.likes_count }}</a>
     {% endif %}
 <br/><br/><br/>
 

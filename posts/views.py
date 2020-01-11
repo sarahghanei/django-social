@@ -16,6 +16,10 @@ def post_detail(request, year, month, day, slug):
 	post = get_object_or_404(Post, created__year=year, created__month=month, created__day=day, slug=slug)
 	comments = Comment.objects.filter(post=post, is_reply=False)
 	reply_form = AddReplyForm()
+	can_like = False
+	if request.user.is_authenticated:
+		if post.user_can_like(request.user):
+			can_like = True
 	if request.method == 'POST':
 		form = AddCommentForm(request.POST)
 		if form.is_valid():
@@ -26,7 +30,7 @@ def post_detail(request, year, month, day, slug):
 			messages.success(request, 'you comment submitted successfully')
 	else:
 		form = AddCommentForm()
-	return render(request, 'posts/post_detail.html', {'post':post, 'comments':comments, 'form':form, 'reply':reply_form})
+	return render(request, 'posts/post_detail.html', {'post':post, 'comments':comments, 'form':form, 'reply':reply_form, 'can_like':can_like})
 
 @login_required
 def add_post(request, user_id):
