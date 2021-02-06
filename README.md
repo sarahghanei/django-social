@@ -1,1 +1,1 @@
-there are source code for (django-social) course in this repository. 
+there are source codes for (django-social) course in this repository. 
