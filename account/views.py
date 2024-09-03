@@ -5,10 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from posts.models import Post
 from django.contrib.auth.decorators import login_required
-from random import randint
 from kavenegar import *
 from .models import Profile, Relation
 from django.http import JsonResponse
+import secrets
 
 
 def user_login(request):
@@ -86,7 +86,7 @@ def phone_login(request):
 		form = PhoneLoginForm(request.POST)
 		if form.is_valid():
 			phone = f"0{form.cleaned_data['phone']}"
-			rand_num = randint(1000, 9999)
+			rand_num = secrets.SystemRandom().randint(1000, 9999)
 			api = KavenegarAPI('54624B564154623558564355506C59417230747550612F7456524A544F4B733535374A624830485856456B3D')
 			params = {'sender':'', 'receptor':phone, 'message':rand_num}
 			api.sms_send(params)
